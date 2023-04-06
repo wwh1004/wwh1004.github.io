@@ -61,7 +61,9 @@ exclude: null
 ignore: null
 theme: icarus
 deploy:
-  type: ''
+  type: git
+  repo: https://github.com/wwh1004/wwh1004.github.io
+  branch: main
 marked:
   prependRoot: true
   postAsset: true
