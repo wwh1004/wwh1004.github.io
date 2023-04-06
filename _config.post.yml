@@ -1,0 +1,57 @@
+# Sidebar configurations.
+# Please be noted that a sidebar is only visible when it has at least one widget
+sidebar:
+    # Left sidebar configurations
+    left:
+        # Whether the sidebar sticks to the top when page scrolls
+        sticky: true
+    # Right sidebar configurations
+    right:
+        # Whether the sidebar sticks to the top when page scrolls
+        sticky: true
+# Sidebar widget configurations
+# http://ppoffice.github.io/hexo-theme-icarus/categories/Widgets/
+widgets:
+    # Profile widget configurations
+    -
+        # Where should the widget be placed, left sidebar or right sidebar
+        position: left
+        type: profile
+        # Author name
+        author: wwh1004
+        # Author title
+        # author_title: Your title
+        # Author's current location
+        # location: Your location
+        # URL or path to the avatar image
+        avatar: /img/avatar.jpg
+        # # Whether show the rounded avatar image
+        avatar_rounded: true
+        # # Email address for the Gravatar
+        # gravatar: 
+        # URL or path for the follow button
+        follow_link: https://github.com/wwh1004
+        # Links to be shown on the bottom of the profile widget
+        # social_links:
+            # Github:
+                # icon: fab fa-github
+                # url: https://github.com/wwh1004
+            # 哔哩哔哩:
+                # icon: fa-brands fa-bilibili
+                # url: https://space.bilibili.com/13480552
+    # Table of contents widget configurations
+    -
+        # Where should the widget be placed, left sidebar or right sidebar
+        position: left
+        type: toc
+        # Whether to show the index of each heading
+        index: true
+        # Whether to collapse sub-headings when they are out-of-view
+        collapsed: false
+        # Maximum level of headings to show (1-6)
+        depth: 6
+    # Recent posts widget configurations
+    -
+        # Where should the widget be placed, left sidebar or right sidebar
+        position: left
+        type: recent_posts
