@@ -105,3 +105,6 @@ dist
 
 # wwh1004
 package-lock.json
+db.json
+.deploy_git/
+public/
