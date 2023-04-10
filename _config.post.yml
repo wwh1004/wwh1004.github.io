@@ -1,14 +1,3 @@
-# Sidebar configurations.
-# Please be noted that a sidebar is only visible when it has at least one widget
-sidebar:
-    # Left sidebar configurations
-    left:
-        # Whether the sidebar sticks to the top when page scrolls
-        sticky: true
-    # Right sidebar configurations
-    right:
-        # Whether the sidebar sticks to the top when page scrolls
-        sticky: true
 # Sidebar widget configurations
 # http://ppoffice.github.io/hexo-theme-icarus/categories/Widgets/
 widgets:
@@ -50,8 +39,3 @@ widgets:
         collapsed: false
         # Maximum level of headings to show (1-6)
         depth: 6
-    # Recent posts widget configurations
-    -
-        # Where should the widget be placed, left sidebar or right sidebar
-        position: left
-        type: recent_posts
