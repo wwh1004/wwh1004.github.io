@@ -3,7 +3,7 @@ title: foobar2000 歌词搜索脚本
 date: 2019-05-02
 lang: zh-CN
 categories:
-- [Misc]
+- [其它]
 toc: true
 ---
 

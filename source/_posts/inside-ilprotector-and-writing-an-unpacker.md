@@ -3,13 +3,13 @@ title: 详解ILProtector并写出脱壳机
 date: 2018-11-18
 updated: 2023-04-09
 lang: zh-CN
+categories:
+- [.NET逆向]
 tags:
 - .NET
 - Reverse Engineering
 - Unpacking
 - ILProtector
-categories:
-- [.NET]
 toc: true
 ---
 
@@ -227,20 +227,20 @@ private sealed class GetMethodBaseDetourAttribute : Attribute {
 ``` csharp
 [GetMethodBaseDetour]
 public virtual MethodBase GetMethodBaseDetour(int i) {
-	IntPtr[] rgMethodHandle;
-	IntPtr methodHandleValue;
-	object runtimeMethodInfoStub;
-	object typicalMethodDefinition;
-	MethodBase result;
+    IntPtr[] rgMethodHandle;
+    IntPtr methodHandleValue;
+    object runtimeMethodInfoStub;
+    object typicalMethodDefinition;
+    MethodBase result;
 
-	rgMethodHandle = (IntPtr[])FieldInfo_rgMethodHandle.GetValue(this);
-	methodHandleValue = rgMethodHandle[i];
-	runtimeMethodInfoStub = ConstructorInfo_RuntimeMethodInfoStub.Invoke(new object[] { methodHandleValue, this });
-	typicalMethodDefinition = MethodInfo_GetTypicalMethodDefinition.Invoke(null, new[] { runtimeMethodInfoStub });
-	result = (MethodBase)MethodInfo_GetMethodBase.Invoke(null, new[] { typicalMethodDefinition });
-	if (result.Name == "InvokeMethod")
-		result = _module.ResolveMethod(_currentMethod.MDToken.ToInt32());
-	return result;
+    rgMethodHandle = (IntPtr[])FieldInfo_rgMethodHandle.GetValue(this);
+    methodHandleValue = rgMethodHandle[i];
+    runtimeMethodInfoStub = ConstructorInfo_RuntimeMethodInfoStub.Invoke(new object[] { methodHandleValue, this });
+    typicalMethodDefinition = MethodInfo_GetTypicalMethodDefinition.Invoke(null, new[] { runtimeMethodInfoStub });
+    result = (MethodBase)MethodInfo_GetMethodBase.Invoke(null, new[] { typicalMethodDefinition });
+    if (result.Name == "InvokeMethod")
+        result = _module.ResolveMethod(_currentMethod.MDToken.ToInt32());
+    return result;
 }
 ```
 
@@ -248,14 +248,14 @@ public virtual MethodBase GetMethodBaseDetour(int i) {
 
 ``` csharp
 private static MethodInfo GetMethodByAttribute<TClass, TMethodAttribute>() where TMethodAttribute : Attribute {
-	foreach (MethodInfo methodInfo in typeof(TClass).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)) {
-		object[] attributes;
+    foreach (MethodInfo methodInfo in typeof(TClass).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)) {
+        object[] attributes;
 
-		attributes = methodInfo.GetCustomAttributes(typeof(TMethodAttribute), false);
-		if (attributes != null && attributes.Length != 0)
-			return methodInfo;
-	}
-	return null;
+        attributes = methodInfo.GetCustomAttributes(typeof(TMethodAttribute), false);
+        if (attributes != null && attributes.Length != 0)
+            return methodInfo;
+    }
+    return null;
 }
 ```
 
@@ -263,41 +263,41 @@ private static MethodInfo GetMethodByAttribute<TClass, TMethodAttribute>() where
 
 ``` csharp
 private static void* GetMethodAddress(MethodBase methodBase) {
-	RuntimeHelpers.PrepareMethod(methodBase.MethodHandle);
-	return (void*)methodBase.MethodHandle.GetFunctionPointer();
+    RuntimeHelpers.PrepareMethod(methodBase.MethodHandle);
+    return (void*)methodBase.MethodHandle.GetFunctionPointer();
 }
 
 private static void WriteJunkCode(ref void* address) {
-	byte[] junkJmp;
+    byte[] junkJmp;
 
-	junkJmp = new byte[] {
-		0xEB, 0x00
-	};
-	// 这里使用JunkJmp，相当于jmp eip/rip+2
-	Write(address, junkJmp);
-	address = (byte*)address + 2;
+    junkJmp = new byte[] {
+        0xEB, 0x00
+    };
+    // 这里使用JunkJmp，相当于jmp eip/rip+2
+    Write(address, junkJmp);
+    address = (byte*)address + 2;
 }
 
 private static void WriteJmp(ref void* address, void* target) {
-	byte[] jmpStub;
+    byte[] jmpStub;
 
-	if (IntPtr.Size == 4) {
-		jmpStub = new byte[] {
-			0xE9, 0x00, 0x00, 0x00, 0x00
-		};
-		fixed (byte* p = jmpStub)
-			*(int*)(p + 1) = (int)target - (int)address - 5;
-	}
-	else {
-		jmpStub = new byte[] {
-			0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // mov rax, target
-			0xFF, 0xE0                                                  // jmp rax
-		};
-		fixed (byte* p = jmpStub)
-			*(ulong*)(p + 2) = (ulong)target;
-	}
-	Write(address, jmpStub);
-	address = (byte*)address + jmpStub.Length;
+    if (IntPtr.Size == 4) {
+        jmpStub = new byte[] {
+            0xE9, 0x00, 0x00, 0x00, 0x00
+        };
+        fixed (byte* p = jmpStub)
+            *(int*)(p + 1) = (int)target - (int)address - 5;
+    }
+    else {
+        jmpStub = new byte[] {
+            0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // mov rax, target
+            0xFF, 0xE0                                                  // jmp rax
+        };
+        fixed (byte* p = jmpStub)
+            *(ulong*)(p + 2) = (ulong)target;
+    }
+    Write(address, jmpStub);
+    address = (byte*)address + jmpStub.Length;
 }
 ```
 
@@ -307,9 +307,9 @@ private static void WriteJmp(ref void* address, void* target) {
 
 ``` csharp
 if (Environment.Version.Major == 2)
-	throw new NotSupportedException();
+    throw new NotSupportedException();
 else
-	InstallHook(typeof(object).Module.GetType("System.Diagnostics.StackFrameHelper").GetMethod("GetMethodBase", BindingFlags.Public | BindingFlags.Instance), GetMethodByAttribute<StackFrameHelperDetour4, GetMethodBaseDetourAttribute>());
+    InstallHook(typeof(object).Module.GetType("System.Diagnostics.StackFrameHelper").GetMethod("GetMethodBase", BindingFlags.Public | BindingFlags.Instance), GetMethodByAttribute<StackFrameHelperDetour4, GetMethodBaseDetourAttribute>());
 ```
 
 接下来，我们写好先前定义的DecryptAllMethodBodys()。先在方法内定义变量
@@ -327,8 +327,8 @@ uint methodTableLength;
 globalType = _moduleDef.GlobalType;
 instanceOfInvoke = null;
 foreach (FieldDef fieldDef in globalType.Fields)
-	if (fieldDef.Name == "Invoke")
-		instanceOfInvoke = _module.ResolveField(fieldDef.MDToken.ToInt32()).GetValue(null);
+    if (fieldDef.Name == "Invoke")
+        instanceOfInvoke = _module.ResolveField(fieldDef.MDToken.ToInt32()).GetValue(null);
 methodInfo_Invoke = instanceOfInvoke.GetType().GetMethod("Invoke");
 methodTableLength = _moduleDef.TablesStream.MethodTable.Rows;
 ```
@@ -352,7 +352,7 @@ methodDef表示当前被Resolve的方法，dynamicMethod表示前面i.Invoke(num
 ``` csharp
 methodDef = _moduleDef.ResolveMethod(rid);
 if (!NeedDecryptMethodBody(methodDef))
-	continue;
+    continue;
 _currentMethod = methodDef;
 dynamicMethod = methodInfo_Invoke.Invoke(instanceOfInvoke, new object[] { methodDef.Body.Instructions[1].GetLdcI4Value() });
 ```
@@ -361,12 +361,12 @@ dynamicMethod = methodInfo_Invoke.Invoke(instanceOfInvoke, new object[] { method
 
 ``` csharp
 try {
-	DynamicMethodBodyReader reader;
+    DynamicMethodBodyReader reader;
 
-	reader = new DynamicMethodBodyReader(_moduleDef, dynamicMethod);
-	reader.Read();
-	_currentMethod.FreeMethodBody();
-	_currentMethod.Body = reader.GetMethod().Body;
+    reader = new DynamicMethodBodyReader(_moduleDef, dynamicMethod);
+    reader.Read();
+    _currentMethod.FreeMethodBody();
+    _currentMethod.Body = reader.GetMethod().Body;
 }
 catch (Exception) {
 }
@@ -386,69 +386,69 @@ catch (Exception) {
 
 ``` csharp
 private static void RemoveRuntimeInitializer() {
-	// IL_0000: ldtoken   '<Module>'
-	// IL_0005: call      class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)
-	// IL_000A: call      native int [mscorlib]System.Runtime.InteropServices.Marshal::GetIUnknownForObject(object)
-	// IL_000F: stloc     V_0
-	// .try
-	// {
-	// 	IL_0013: call      int32 [mscorlib]System.IntPtr::get_Size()
-	// 	IL_0018: ldc.i4.4
-	// 	IL_0019: bne.un.s  IL_0031
+    // IL_0000: ldtoken   '<Module>'
+    // IL_0005: call      class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)
+    // IL_000A: call      native int [mscorlib]System.Runtime.InteropServices.Marshal::GetIUnknownForObject(object)
+    // IL_000F: stloc     V_0
+    // .try
+    // {
+    // 	IL_0013: call      int32 [mscorlib]System.IntPtr::get_Size()
+    // 	IL_0018: ldc.i4.4
+    // 	IL_0019: bne.un.s  IL_0031
 
-	// 	IL_001B: call      class [mscorlib]System.Version [mscorlib]System.Environment::get_Version()
-	// 	IL_0020: callvirt  instance int32 [mscorlib]System.Version::get_Major()
-	// 	IL_0025: ldloc     V_0
-	// 	IL_0029: call      bool '<Module>'::g(int32, native int)
-	// 	IL_002E: pop
-	// 	IL_002F: br.s      IL_004D
+    // 	IL_001B: call      class [mscorlib]System.Version [mscorlib]System.Environment::get_Version()
+    // 	IL_0020: callvirt  instance int32 [mscorlib]System.Version::get_Major()
+    // 	IL_0025: ldloc     V_0
+    // 	IL_0029: call      bool '<Module>'::g(int32, native int)
+    // 	IL_002E: pop
+    // 	IL_002F: br.s      IL_004D
 
-	// 	IL_0031: call      int32 [mscorlib]System.IntPtr::get_Size()
-	// 	IL_0036: ldc.i4.8
-	// 	IL_0037: bne.un.s  IL_004D
+    // 	IL_0031: call      int32 [mscorlib]System.IntPtr::get_Size()
+    // 	IL_0036: ldc.i4.8
+    // 	IL_0037: bne.un.s  IL_004D
 
-	// 	IL_0039: call      class [mscorlib]System.Version [mscorlib]System.Environment::get_Version()
-	// 	IL_003E: callvirt  instance int32 [mscorlib]System.Version::get_Major()
-	// 	IL_0043: ldloc     V_0
-	// 	IL_0047: call      bool '<Module>'::h(int32, native int)
-	// 	IL_004C: pop
+    // 	IL_0039: call      class [mscorlib]System.Version [mscorlib]System.Environment::get_Version()
+    // 	IL_003E: callvirt  instance int32 [mscorlib]System.Version::get_Major()
+    // 	IL_0043: ldloc     V_0
+    // 	IL_0047: call      bool '<Module>'::h(int32, native int)
+    // 	IL_004C: pop
 
-	// 	IL_004D: leave.s   IL_005A
-	// } // end .try
-	// finally
-	// {
-	// 	IL_004F: ldloc     V_0
-	// 	IL_0053: call      int32 [mscorlib]System.Runtime.InteropServices.Marshal::Release(native int)
-	// 	IL_0058: pop
-	// 	IL_0059: endfinally
-	// } // end handler
+    // 	IL_004D: leave.s   IL_005A
+    // } // end .try
+    // finally
+    // {
+    // 	IL_004F: ldloc     V_0
+    // 	IL_0053: call      int32 [mscorlib]System.Runtime.InteropServices.Marshal::Release(native int)
+    // 	IL_0058: pop
+    // 	IL_0059: endfinally
+    // } // end handler
 
-	MethodDef cctor;
-	IList<Instruction> instructionList;
-	int startIndex;
-	int endIndex;
-	IList<ExceptionHandler> exceptionHandlerList;
+    MethodDef cctor;
+    IList<Instruction> instructionList;
+    int startIndex;
+    int endIndex;
+    IList<ExceptionHandler> exceptionHandlerList;
 
-	cctor = _moduleDef.GlobalType.FindStaticConstructor();
-	instructionList = cctor.Body.Instructions;
-	startIndex = 0;
-	for (int i = 0; i < instructionList.Count; i++)
-		if (instructionList[i].OpCode == OpCodes.Call && instructionList[i].Operand is MemberRef && ((MemberRef)instructionList[i].Operand).Name == "GetIUnknownForObject")
-			startIndex = i - 2;
-	endIndex = 0;
-	for (int i = startIndex; i < instructionList.Count; i++)
-		if (instructionList[i].OpCode == OpCodes.Call && instructionList[i].Operand is MemberRef && ((MemberRef)instructionList[i].Operand).Name == "Release")
-			endIndex = i + 3;
-	for (int i = startIndex; i < endIndex; i++) {
-		instructionList[i].OpCode = OpCodes.Nop;
-		instructionList[i].Operand = null;
-	}
-	exceptionHandlerList = cctor.Body.ExceptionHandlers;
-	for (int i = 0; i < exceptionHandlerList.Count; i++)
-		if (exceptionHandlerList[i].HandlerType == ExceptionHandlerType.Finally && exceptionHandlerList[i].HandlerEnd == instructionList[endIndex]) {
-			exceptionHandlerList.RemoveAt(i);
-			break;
-		}
+    cctor = _moduleDef.GlobalType.FindStaticConstructor();
+    instructionList = cctor.Body.Instructions;
+    startIndex = 0;
+    for (int i = 0; i < instructionList.Count; i++)
+        if (instructionList[i].OpCode == OpCodes.Call && instructionList[i].Operand is MemberRef && ((MemberRef)instructionList[i].Operand).Name == "GetIUnknownForObject")
+            startIndex = i - 2;
+    endIndex = 0;
+    for (int i = startIndex; i < instructionList.Count; i++)
+        if (instructionList[i].OpCode == OpCodes.Call && instructionList[i].Operand is MemberRef && ((MemberRef)instructionList[i].Operand).Name == "Release")
+            endIndex = i + 3;
+    for (int i = startIndex; i < endIndex; i++) {
+        instructionList[i].OpCode = OpCodes.Nop;
+        instructionList[i].Operand = null;
+    }
+    exceptionHandlerList = cctor.Body.ExceptionHandlers;
+    for (int i = 0; i < exceptionHandlerList.Count; i++)
+        if (exceptionHandlerList[i].HandlerType == ExceptionHandlerType.Finally && exceptionHandlerList[i].HandlerEnd == instructionList[endIndex]) {
+            exceptionHandlerList.RemoveAt(i);
+            break;
+        }
 }
 ```
 

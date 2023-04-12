@@ -3,13 +3,13 @@ title: .NET JIT脱壳指南与工具源码
 date: 2019-08-08
 updated: 2023-04-09
 lang: zh-CN
+categories:
+- [.NET逆向]
 tags:
 - .NET
 - Reverse Engineering
 - Unpacking
 - JIT
-categories:
-- [.NET]
 toc: true
 ---
 
