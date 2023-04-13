@@ -7,11 +7,11 @@ categories:
 - [.NET逆向]
 tags:
 - .NET
-- Reverse Engineering
-- Unpacking
+- 逆向工程
+- 脱壳
 - ConfuserEx
-- Anti-Tamper
-- Anti-Dump
+- 反篡改
+- 反转储
 toc: true
 ---
 

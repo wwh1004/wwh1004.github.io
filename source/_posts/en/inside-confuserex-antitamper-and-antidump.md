@@ -1,5 +1,5 @@
 ---
-title: Inside ConfuserEx's Anti-Tamper and Anti-Dump
+title: Inside ConfuserEx's Anti-tamper and Anti-dumping
 date: 2018-08-14
 updated: 2023-04-11
 lang: en
@@ -10,8 +10,8 @@ tags:
 - Reverse Engineering
 - Unpacking
 - ConfuserEx
-- Anti-Tamper
-- Anti-Dump
+- Anti-tamper
+- Anti-dumping
 toc: true
 hide: true
 ---
@@ -22,9 +22,9 @@ hide: true
 </div>
 </article>
 
-<!-- # Inside ConfuserEx's Anti-Tamper and Anti-Dump -->
+<!-- # Inside ConfuserEx's Anti-tamper and Anti-dumping -->
 
-Many people know that using a series of tools such as dnSpy, Dump, and CodeCracker can be used to remove the ConfuserEx obfuscator. There are many tutorials available online, but there is no article explaining the underlying principles. This article will explain in detail the Anti Tamper and Anti Dump protections of ConfuserEx.
+Many people know that using a series of tools such as dnSpy then dump, and CodeCracker's can be used to remove the ConfuserEx obfuscator. There are many tutorials available online, but there is no article explaining the underlying principles. This article will explain in detail the Anti Tamper and Anti Dump protections of ConfuserEx.
 
 <!-- more -->
 

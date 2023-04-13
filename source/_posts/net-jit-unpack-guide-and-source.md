@@ -7,8 +7,8 @@ categories:
 - [.NET逆向]
 tags:
 - .NET
-- Reverse Engineering
-- Unpacking
+- 逆向工程
+- 脱壳
 - JIT
 toc: true
 ---

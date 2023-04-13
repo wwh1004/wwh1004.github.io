@@ -1,5 +1,5 @@
 ---
-title: Inside ILProtector and writing an unpacker
+title: Inside ILProtector and Writing an Unpacker
 date: 2018-11-18
 updated: 2023-04-09
 lang: en
@@ -20,7 +20,7 @@ hide: true
 </div>
 </article>
 
-<!-- # Inside ILProtector and writing an unpacker -->
+<!-- # Inside ILProtector and Writing an Unpacker -->
 
 The core protection principle of ILProtector is dynamic method. This article provides a detailed introduction to the protection details of ILProtector and specifically writes out the unpacker targeting it.
 

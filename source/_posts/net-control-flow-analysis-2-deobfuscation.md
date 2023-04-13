@@ -7,9 +7,9 @@ categories:
 - [.NET逆向]
 tags:
 - .NET
-- Reverse Engineering
-- Unpacking
-- Control Flow Analysis
+- 逆向工程
+- 脱壳
+- 控制流分析
 toc: true
 ---
 
